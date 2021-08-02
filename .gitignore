@@ -1,0 +1,15 @@
+/ui_flaskdev
+/.vscode
+/node_modules
+
+package.json
+package-lock.json
+*.pyc
+*.swp
+.idea
+*.iml
+build
+dist
+*.egg*
+.DS_Store
+*.zip

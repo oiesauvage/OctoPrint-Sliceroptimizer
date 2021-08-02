@@ -1,0 +1,216 @@
+<div class="container-fluid">
+    <H4>Slicer Optimizer</H4>
+    <!-- Experiment card -->
+    <div class="row-fluid">
+        <div class="card .span12">
+            <H5>Experiment profile</H5>
+            <descriptive-table params="names: experiment.description_names, values: experiment.description_values">
+            </descriptive-table>
+            <experiment-additional-description
+                params="summary: experiment.selected_summary, params_list: experiment.selected_params_desc">
+            </experiment-additional-description>
+            <H5>Select or create experiment</H5>
+            <div class="row-fluid">
+                <form class="form-inline">
+                    <select id="experiment_select" class="span5"
+                        data-bind="options: experiment.available_names, optionsCaption: 'Select an experiment...', value: experiment.selected_name">
+                    </select>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewExperimentModal"
+                        data-bind="click: function() {printer.updateDataFromApi(); click: filament.updateNamesFromApi()}">
+                        <i class="fas fa-plus"></i></button>
+                    <button id="delete_experiment_btn" type="button" class="btn btn-danger"
+                        data-bind="click: experiment.deleteInDB">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button id="change_init_end_gcode_btn" type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#init_end_gcode_modal">Init./ end G-Code</button>
+                </form>
+                <div class="modal hide fade" id="init_end_gcode_modal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3>Init. and end G-Code</h3>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Init. G-Code</h5>
+                        <textarea rows="5" style="min-width: 95%" data-bind="value: experiment.init_gcode"></textarea>
+                        <h5>End G-Code</h5>
+                        <textarea rows="5" style="min-width: 95%" data-bind="value: experiment.end_gcode"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="init_end_gcode_abort_btn" type="button" class="btn btn-secondary"
+                            data-dismiss="modal">Abort</button>
+                        <button id="init_end_gcode_save_btn" type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Samples grid card -->
+    <div class="row-fluid">
+        <div class="card .span12">
+            <H5>Samples grid</H5>
+            <samples-grid params="samples: grid.samples, selected_grid_id: grid.selected_grid_id"></samples-grid>
+            <H5>Select or create a test grid</H5>
+            <div class="control-group" id="samples_grid_field">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <select class="span2" data-bind="options: grid.grid_numbers, value: grid.selected_grid_id">
+                        </select>
+                        <input id="samples_number" type="number" class="input-mini" min=1
+                            data-bind="attr: {max: experiment.max_samples}">
+                        <button id="new_grid_btn" type="button" class="btn btn-success" data-toggle="tooltip"
+                            data-bind="click: grid.addGrid">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button id="delete_grid_btn" type="button" class="btn btn-danger"
+                            data-bind="click: grid.deleteGrid">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button id="save_grid_btn" type="button" class="btn btn-primary"
+                            data-bind="click: grid.saveGrid">Save</button>
+                        <button id="gen_gcode_btn" type="button" class="btn btn-warning"
+                            data-bind="click: grid.printGrid">G-Code</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Results card -->
+    <div class="row-fluid">
+        <div class="card .span12">
+            <H5>Optimization results</H5>
+            <optimization-results params="results: results.results, 
+                        fmin: results.fmin, 
+                        std: results.std">
+            </optimization-results>
+            <H5>Compute results and validation sample</H5>
+            <form class="form-inline">
+                <button id="compute_btn" type="button" class="btn btn-primary"
+                    data-bind="click: results.computeResults"><i class="fas fa-cogs"></i></button>
+                <button id="validation_sample_btn" type="button" class="btn btn-warning"
+                    data-bind="click: results.printValidationSample">Validation G-Code</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<!-- Filament modal -->
+<div class="modal hide fade" id="NewFilamentModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>New filament</h3>
+    </div>
+    <div class="modal-body">
+        <form data-bind="submit: filament.addInDBfromForm" id="filament_form">
+            <div class="form-group">
+                <div class="control-group" id="filament_name_field">
+                    <label class="control-label">Filament Name</label>
+                    <input id="filament_name" type="text" required>
+                </div>
+                <div class="control-group">
+                    <label>Material</label>
+                    <input id="filament_material" type="text" required>
+                </div>
+                <div class="control-group">
+                    <label>Diameter (mm)</label>
+                    <input id="filament_diameter" type="number" min="0" , step="0.01" required>
+                </div>
+                <div class="control-group" id="filament_ext_temp">
+                    <label class="control-label">Extrusion temperature range</label>
+                    <div class="form-inline">
+                        <input id="filament_ext_min_temperature" placeholder="min" class="input-mini" type="number"
+                            min="0" required>
+                        <input id="filament_ext_max_temperature" placeholder="max" class="input-mini" type="number"
+                            min="0" required>
+                    </div>
+                </div>
+                <div class="control-group" id="filament_bed_temp">
+                    <label class="control-label">Bed temperature range</label>
+                    <div class="form-inline">
+                        <input id="filament_bed_min_temperature" placeholder="min" class="input-mini" type="number"
+                            min="0" required>
+                        <input id="filament_bed_max_temperature" placeholder="max" class="input-mini" type="number"
+                            min="0" required>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="abort_fil_creation">Abort</button>
+        <button type="submit" class="btn btn-primary" data-bind="click: filament.addInDBfromForm">Save</button>
+    </div>
+</div>
+
+<!-- Experiment modal -->
+<div class="modal hide fade" id="NewExperimentModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>New experiment</h3>
+    </div>
+    <div class="modal-body">
+        <div class="control-group" id="exp_name_field">
+            <label><strong>Experiment name and disposition</strong></label>
+            <input id="exp_name" type="text" placeholder="Type an experiment name">
+        </div>
+        <label class="checkbox">
+            <input id="exp_is_first_layer" type="checkbox"><span class="help-inline">is a first layer
+                experiment</span>
+        </label>
+        <div class="control-group" id="exp_spacing_field">
+            <input id="exp_spacing" class="input-small" type="number" min="0" , step="0.01" required>
+            <span class="help-inline">Spacing between samples in mm</span>
+        </div>
+
+        <div class="control-group" id="select_sample_field">
+            <label><strong>Sample STL file</strong></label>
+            <select-file-uploader params="id: experiment.sample_id, selected_name: experiment.sample_select, 
+                    accept: experiment.sample_accept, submit_id: experiment.submit_id,
+                    files_field: experiment.sample_files_field, caption: 'Select or upload sample file...'">
+            </select-file-uploader>
+        </div>
+
+        <div class="control-group" id="exp_printer_field">
+            <label><strong>Printer</strong></label>
+            <select class="span5" name="printer" id="exp_printer" placeholder="Choose a printer" data-bind="options: printer.available_names,
+                           optionsCaption: 'Select a printer...',
+                           value: printer.name">
+            </select>
+            <descriptive-table params=" names: printer.description_names, values: printer.description_values">
+            </descriptive-table>
+        </div>
+
+        <div class="control-group" id="exp_filament_field">
+            <label><strong>Filament</strong></label>
+            <form class="form-inline">
+                <select id="exp_filament" class="span5" name="filament" id="filament_select" data-bind="options: filament.available_names,
+                                       optionsCaption: 'Select or create a filament...',
+                                       value: filament.selected_name">
+                </select>
+                <button type=" button" class="btn btn-success" data-toggle="modal" data-target="#NewFilamentModal"><i
+                        class="fas fa-plus"></i></button>
+                <button type="button" class="btn btn-danger" data-bind="click: filament.deleteInDB">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+            <descriptive-table params="names: filament.description_names, values: filament.description_values">
+            </descriptive-table>
+        </div>
+
+        <label><strong>Initial Slic3r configuration (optional)</strong></label>
+        <select-file-uploader params="id: experiment.config_id, selected_name: experiment.config_select, 
+                    accept: experiment.config_accept, submit_id: experiment.submit_id,
+                    files_field: experiment.config_files_field, caption: 'Select or upload config...'">
+        </select-file-uploader>
+
+        <label><strong>Optimized parameters</strong></label>
+        <parameters-table params="value: parameters">
+        </parameters-table>
+    </div>
+    <div class="modal-footer">
+        <button id="abort_experiment_creation" type="button" class="btn btn-secondary"
+            data-dismiss="modal">Abort</button>
+        <button id="submit_experiment" type="submit" class="btn btn-primary">Create</button>
+    </div>
+</div>

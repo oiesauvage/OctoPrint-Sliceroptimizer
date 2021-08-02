@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_SlicerOptimizer/templates *
+recursive-include octoprint_SlicerOptimizer/translations *
+recursive-include octoprint_SlicerOptimizer/static *
