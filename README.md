@@ -1,6 +1,6 @@
 # OctoPrint-Sliceroptimizer
 
-This plugins is an interface for `slicoptim` python package.  
+This plugin is an interface for `slicoptim` python package.  
 It aims to generate semi-randomized slicing tests for FDM 3d printing.  
 Each test sample is rated by the user. Ratings are then exploited by an optimizer to compute optimal slicing values.
 
