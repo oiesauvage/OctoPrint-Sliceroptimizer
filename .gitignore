@@ -1,6 +1,7 @@
 /ui_flaskdev
 /.vscode
 /node_modules
+/.venv
 
 package.json
 package-lock.json
