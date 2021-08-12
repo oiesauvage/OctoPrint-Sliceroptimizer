@@ -29,7 +29,7 @@ const FilamentViewModel = function (filamentUrl) {
   // methods
 
   /**
-   * Updates experiment data from plugin API.
+   * Updates filament data from plugin API.
    */
   self.updateDataFromApi = function () {
     if (typeof self.selected_name() !== 'undefined') {
@@ -45,7 +45,7 @@ const FilamentViewModel = function (filamentUrl) {
   };
 
   /**
-   * Update experiment names from plugin API.
+   * Update filament names from plugin API.
    */
   self.updateNamesFromApi = function () {
     $.get(`${self.filament_url}/get_names`, (data) => {
@@ -58,7 +58,7 @@ const FilamentViewModel = function (filamentUrl) {
   };
 
   /**
-   * Delete selected experiment in database.
+   * Delete selected filament in database.
    */
   self.deleteInDB = function () {
     $.ajax({
@@ -71,7 +71,7 @@ const FilamentViewModel = function (filamentUrl) {
   };
 
   /**
-   * Create new experiment in database.
+   * Create new filament in database.
    */
   self.addInDBfromForm = function () {
     const form = new FormData();
@@ -82,8 +82,7 @@ const FilamentViewModel = function (filamentUrl) {
     form.append('filament_ext_max_temperature', self.fil_ext_max.val());
     form.append('filament_bed_min_temperature', self.fil_bed_min.val());
     form.append('filament_bed_max_temperature', self.fil_bed_max.val());
-
-    if (self.checkFrom()) {
+    if (self.checkForm()) {
       $.ajax({
         url: `${self.filament_url}/add`,
         type: 'POST',
@@ -103,7 +102,7 @@ const FilamentViewModel = function (filamentUrl) {
 
   /**
    * Generate arrays to populate descriptive table for experiments.
-   * @param {Object} filamentData - Object from experiment data returned by plugin API.
+   * @param {Object} filamentData - Object from filament data returned by plugin API.
    * @returns Two arrays for names and corresponding descriptions.
    */
   self.getDescription = function (filamentData) {
@@ -122,11 +121,11 @@ const FilamentViewModel = function (filamentUrl) {
    * Checks if the form for new experiments is valid.
    * @returns boolean
    */
-  self.checkFrom = function () {
+  self.checkForm = function () {
     const filExtMin = parseFloat(self.fil_ext_min.val());
     const filExtMax = parseFloat(self.fil_ext_max.val());
     const filBedMin = parseFloat(self.fil_bed_min.val());
-    const filBedMax = parseFloat(self.fil_ext_max.val());
+    const filBedMax = parseFloat(self.fil_bed_max.val());
     let isValid = true;
     if (filExtMax < filExtMin) {
       notifyError('Filament extrusion temperatures are inverted', '#filament_ext_temp')();
