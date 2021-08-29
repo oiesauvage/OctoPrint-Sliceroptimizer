@@ -33,7 +33,7 @@ plugin_url = "https://github.com/oiesauvage/OctoPrint-Sliceroptimizer"
 plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
-plugin_requires = ["sliceoptim==0.1.0"]
+plugin_requires = ["sliceoptim>=0.1.2"]
 
 ### --------------------------------------------------------------------------------------------------------------------
 ### More advanced options that you usually shouldn't have to touch follow after this point
@@ -59,11 +59,7 @@ plugin_ignored_packages = []
 # Example:
 #     plugin_requires = ["someDependency==dev"]
 #     additional_setup_parameters = {"dependency_links": ["https://github.com/someUser/someRepo/archive/master.zip#egg=someDependency-dev"]}
-additional_setup_parameters = {
-    "dependency_links": [
-        "https://github.com/oiesauvage/sliceoptim/releases/download/v0.1.0/sliceoptim-0.1.0-py3-none-any.whl#egg=sliceoptim-0.1.0"
-    ]
-}
+additional_setup_parameters = []
 
 ########################################################################################################################
 
