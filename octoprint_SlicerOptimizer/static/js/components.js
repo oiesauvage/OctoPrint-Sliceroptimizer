@@ -12,17 +12,21 @@ ko.components.register('descriptive-table', {
     this.values = params.values;
   },
   template:
-        '<table class="table table-hover table-striped table-condensed"> \
+        '<table class="table table-hover table-condensed"> \
+            <thead> \
             <tr> \
                 <!-- ko foreach: names --> \
                 <th data-bind="text: $data"></th> \
                 <!-- /ko --> \
             </tr> \
+            </thead> \
+            <tbody> \
             <tr> \
                 <!-- ko foreach: values --> \
                 <td data-bind="html: $data"></td> \
                 <!-- /ko --> \
             </tr> \
+            </tbody> \
         <table>',
 });
 
@@ -58,12 +62,15 @@ ko.components.register('parameters-table', {
     this.params = params.value;
   },
   template:
-        '<table class="table table-hover table-striped table-condensed">  \
+        '<table class="table table-hover table-condensed">  \
+            <thead> \
             <tr>  \
                 <th>Parameter (slic3r)</th>  \
                 <th class="span3">Values range</th>  \
                 <th class="span1"></th>  \
             </tr>  \
+            </thead> \
+            <tbody> \
         <!-- ko foreach: params.array --> \
             <tr>  \
                 <td data-bind="text: name"></td>  \
@@ -73,7 +80,7 @@ ko.components.register('parameters-table', {
                 </td>  \
             </tr>  \
         <!-- /ko --> \
-            <tr class="warning">  \
+            <tr>  \
                 <td> \
                 <select name="param_name" class="span3" \
                 data-bind="options: params.available_names, value: params.selected_name">  \
@@ -89,6 +96,7 @@ ko.components.register('parameters-table', {
                     <button class="btn btn-success" data-bind="click: params.addParameter"><i class="fas fa-plus"></i></button>  \
                 </td>  \
             </tr>  \
+            </tbody> \
         </table>',
 });
 
@@ -226,13 +234,16 @@ ko.components.register('samples-grid', {
     self.selected_grid_id = params.selected_grid_id;
   },
   template:
-        '<table class="table table-hover table-striped table-condensed">  \
+        '<table class="table table-hover table-condensed">  \
+            <thead> \
                 <tr>  \
                     <th>Sample id</th>  \
                     <th>Print time</th>  \
                     <th>Quality</th>  \
                     <th>Computed Cost</th>  \
                 </tr>  \
+            </thead> \
+            <tbody> \
                 <!-- ko foreach: samples_desc --> \
                 <!-- ko if: $data.sample_grid_id === $component.selected_grid_id() --> \
                 <tr>  \
@@ -245,6 +256,7 @@ ko.components.register('samples-grid', {
                 </tr>  \
                 <!-- /ko --> \
                 <!-- /ko --> \
+            </tbody> \
         </table>',
 });
 
@@ -259,24 +271,28 @@ ko.components.register('optimization-results', {
     self.fmin = params.fmin;
   },
   template:
-    '<table class="table table-hover table-striped table-condensed"> \
+    '<table class="table table-hover table-condensed"> \
+            <thead> \
                 <tr> \
                     <th>Parameter</th> \
                     <th>Value</th> \
                 </tr> \
+            </thead> \
+            <tbody> \
                 <!-- ko foreach: results --> \
                 <tr> \
                     <td data-bind="text: $data.name"></td> \
                     <td data-bind="text: $data.value"></td> \
                 </tr> \
                 <!-- /ko --> \
-                <tr class="warning"> \
+                <tr> \
                     <td>cost precision</td> \
                     <td data-bind="text: std"></td> \
                 </tr> \
-                <tr class="success"> \
+                <tr> \
                     <td>optimal cost</td> \
                     <td data-bind="text: fmin"></td> \
                 </tr> \
-            </table>',
+            </tbody> \
+    </table>',
 });
