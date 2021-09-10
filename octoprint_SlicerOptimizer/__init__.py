@@ -1,6 +1,5 @@
 # coding=utf-8
 from __future__ import absolute_import, with_statement
-from flask import json
 from octoprint.access.permissions import Permissions
 from sliceoptim.core import (
     Filament,
@@ -11,7 +10,9 @@ from sliceoptim.core import (
 )
 from sliceoptim.io import Database
 import flask
-from flask import request
+from flask import json, request
+import shutil
+import os
 
 ### (Don't forget to remove me)
 # This is a basic skeleton for your plugin's __init__.py. You probably want to adjust the class name of your plugin
@@ -83,6 +84,14 @@ class SliceroptimizerPlugin(
         self.sync_printers_with_octoprint()
         self.experiment = None
         self.results = None
+        # load default stl files
+        stl_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stl_files")
+        if os.path.isdir(stl_path):
+            trg_path = self.get_plugin_data_folder()
+            file_names = os.listdir(stl_path)
+            for file_name in file_names:
+                shutil.copy2(os.path.join(stl_path, file_name), trg_path)
+            shutil.rmtree(stl_path)
         pass
 
     # After printer profiles are modified
